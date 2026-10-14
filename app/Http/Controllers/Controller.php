@@ -36,6 +36,14 @@ use OpenApi\Attributes as OA;
     name: "Catálogo",
     description: "Endpoints públicos para categorías, marcas y navegación del catálogo"
 )]
+#[OA\Tag(
+    name: "Productos",
+    description: "Endpoints públicos para catálogo, búsqueda, destacados y detalle de productos"
+)]
+#[OA\Tag(
+    name: "Reseñas",
+    description: "Endpoints para calificaciones y reseñas de productos"
+)]
 abstract class Controller
 {
     //
