@@ -28,6 +28,10 @@ use OpenApi\Attributes as OA;
     name: "Auth",
     description: "Endpoints de autenticación de clientes y usuarios"
 )]
+#[OA\Tag(
+    name: "Perfil",
+    description: "Endpoints para la gestión del perfil del cliente"
+)]
 abstract class Controller
 {
     //
