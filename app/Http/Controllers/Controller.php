@@ -2,6 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Attributes as OA;
+
+#[OA\Info(
+    version: "1.0.0",
+    title: "Ecommerce API REST",
+    description: "API REST profesional para Ecommerce en Laravel 13 con autenticación Sanctum y PostgreSQL (Neon).",
+    contact: new OA\Contact(
+        name: "Soporte Técnico API",
+        email: "soporte@ecommerce.test"
+    )
+)]
+#[OA\Server(
+    url: "http://127.0.0.1:8000",
+    description: "Servidor Local"
+)]
+#[OA\SecurityScheme(
+    securityScheme: "bearerAuth",
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT",
+    description: "Ingrese su token en formato: Bearer {token}"
+)]
+#[OA\Tag(
+    name: "Auth",
+    description: "Endpoints de autenticación de clientes y usuarios"
+)]
 abstract class Controller
 {
     //
