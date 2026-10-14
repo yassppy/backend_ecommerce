@@ -48,6 +48,10 @@ use OpenApi\Attributes as OA;
     name: "Carrito",
     description: "Endpoints para la gestión del carrito de compras del cliente autenticado"
 )]
+#[OA\Tag(
+    name: "Wishlist",
+    description: "Endpoints para la gestión de productos favoritos (lista de deseos) del cliente"
+)]
 abstract class Controller
 {
     //
