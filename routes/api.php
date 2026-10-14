@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,15 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [BrandController::class, 'index']);
         Route::get('/{slug}', [BrandController::class, 'show']);
         Route::get('/{slug}/products', [BrandController::class, 'products']);
+    });
+
+    // Rutas públicas de Productos
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/featured', [ProductController::class, 'featured']);
+        Route::get('/search', [ProductController::class, 'search']);
+        Route::get('/{slug}', [ProductController::class, 'show']);
+        Route::get('/{product_id}/reviews', [ProductController::class, 'reviews'])->whereNumber('product_id');
     });
 
 });
