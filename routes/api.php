@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +49,14 @@ Route::prefix('v1')->group(function () {
         Route::delete('/clear', [CartController::class, 'clear']);
         Route::put('/{id}', [CartController::class, 'update'])->whereNumber('id');
         Route::delete('/{id}', [CartController::class, 'destroy'])->whereNumber('id');
+    });
+
+    // Rutas de Wishlist / Favoritos (requieren Bearer Token con Sanctum)
+    Route::middleware('auth:sanctum')->prefix('wishlist')->group(function () {
+        Route::get('/', [WishlistController::class, 'index']);
+        Route::post('/', [WishlistController::class, 'store']);
+        Route::post('/toggle', [WishlistController::class, 'toggle']);
+        Route::delete('/{product_id}', [WishlistController::class, 'destroy'])->whereNumber('product_id');
     });
 
     // Rutas públicas de Categorías
