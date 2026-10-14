@@ -52,6 +52,10 @@ use OpenApi\Attributes as OA;
     name: "Wishlist",
     description: "Endpoints para la gestión de productos favoritos (lista de deseos) del cliente"
 )]
+#[OA\Tag(
+    name: "Direcciones de Envío",
+    description: "Endpoints para la gestión de direcciones de envío del cliente"
+)]
 abstract class Controller
 {
     //

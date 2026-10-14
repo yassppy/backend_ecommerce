@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\ShippingAddressController;
 use App\Http\Controllers\Api\V1\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/', [WishlistController::class, 'store']);
         Route::post('/toggle', [WishlistController::class, 'toggle']);
         Route::delete('/{product_id}', [WishlistController::class, 'destroy'])->whereNumber('product_id');
+    });
+
+    // Rutas de Direcciones de Envío (requieren Bearer Token con Sanctum)
+    Route::middleware('auth:sanctum')->prefix('shipping-addresses')->group(function () {
+        Route::get('/', [ShippingAddressController::class, 'index']);
+        Route::post('/', [ShippingAddressController::class, 'store']);
+        Route::get('/{id}', [ShippingAddressController::class, 'show'])->whereNumber('id');
+        Route::put('/{id}', [ShippingAddressController::class, 'update'])->whereNumber('id');
+        Route::delete('/{id}', [ShippingAddressController::class, 'destroy'])->whereNumber('id');
     });
 
     // Rutas públicas de Categorías
