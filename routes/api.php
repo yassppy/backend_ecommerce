@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -37,6 +38,16 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);
         Route::put('/', [ProfileController::class, 'update']);
         Route::put('/password', [ProfileController::class, 'updatePassword']);
+    });
+
+    // Rutas de Carrito (requieren Bearer Token con Sanctum)
+    Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'store']);
+        Route::get('/summary', [CartController::class, 'summary']);
+        Route::delete('/clear', [CartController::class, 'clear']);
+        Route::put('/{id}', [CartController::class, 'update'])->whereNumber('id');
+        Route::delete('/{id}', [CartController::class, 'destroy'])->whereNumber('id');
     });
 
     // Rutas públicas de Categorías

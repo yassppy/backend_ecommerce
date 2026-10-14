@@ -44,6 +44,10 @@ use OpenApi\Attributes as OA;
     name: "Reseñas",
     description: "Endpoints para calificaciones y reseñas de productos"
 )]
+#[OA\Tag(
+    name: "Carrito",
+    description: "Endpoints para la gestión del carrito de compras del cliente autenticado"
+)]
 abstract class Controller
 {
     //
