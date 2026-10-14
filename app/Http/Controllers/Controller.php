@@ -56,6 +56,10 @@ use OpenApi\Attributes as OA;
     name: "Direcciones de Envío",
     description: "Endpoints para la gestión de direcciones de envío del cliente"
 )]
+#[OA\Tag(
+    name: "Checkout",
+    description: "Endpoints para el proceso de confirmación de compra y creación de órdenes"
+)]
 abstract class Controller
 {
     //

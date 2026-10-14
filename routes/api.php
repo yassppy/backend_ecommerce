@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\CheckoutController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ShippingAddressController;
@@ -67,6 +68,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/{id}', [ShippingAddressController::class, 'show'])->whereNumber('id');
         Route::put('/{id}', [ShippingAddressController::class, 'update'])->whereNumber('id');
         Route::delete('/{id}', [ShippingAddressController::class, 'destroy'])->whereNumber('id');
+    });
+
+    // Rutas de Checkout (requieren Bearer Token con Sanctum)
+    Route::middleware('auth:sanctum')->prefix('checkout')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index']);
+        Route::post('/place-order', [CheckoutController::class, 'placeOrder']);
     });
 
     // Rutas públicas de Categorías
