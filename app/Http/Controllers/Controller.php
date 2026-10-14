@@ -32,6 +32,10 @@ use OpenApi\Attributes as OA;
     name: "Perfil",
     description: "Endpoints para la gestión del perfil del cliente"
 )]
+#[OA\Tag(
+    name: "Catálogo",
+    description: "Endpoints públicos para categorías, marcas y navegación del catálogo"
+)]
 abstract class Controller
 {
     //

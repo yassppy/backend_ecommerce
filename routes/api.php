@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +36,20 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);
         Route::put('/', [ProfileController::class, 'update']);
         Route::put('/password', [ProfileController::class, 'updatePassword']);
+    });
+
+    // Rutas públicas de Categorías
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::get('/{slug}', [CategoryController::class, 'show']);
+        Route::get('/{slug}/products', [CategoryController::class, 'products']);
+    });
+
+    // Rutas públicas de Marcas (Brands)
+    Route::prefix('brands')->group(function () {
+        Route::get('/', [BrandController::class, 'index']);
+        Route::get('/{slug}', [BrandController::class, 'show']);
+        Route::get('/{slug}/products', [BrandController::class, 'products']);
     });
 
 });

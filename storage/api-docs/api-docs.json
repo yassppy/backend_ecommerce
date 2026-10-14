@@ -476,6 +476,552 @@
                 ]
             }
         },
+        "/api/v1/brands": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Listar todas las marcas",
+                "description": "Obtiene el listado completo de marcas disponibles con el conteo de productos activos. Permite filtrar por búsqueda y paginar.",
+                "operationId": "265f173d55c77d2ffffe46be4ba57fa8",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Término de búsqueda por nombre o descripción de la marca",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de marcas por página (si no se envía o es nulo, devuelve lista completa)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Marcas obtenidas exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Marcas obtenidas correctamente"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Apple"
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "apple"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Dispositivos electrónicos de Apple",
+                                                        "nullable": true
+                                                    },
+                                                    "products_count": {
+                                                        "type": "integer",
+                                                        "example": 8
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/brands/{slug}": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Mostrar una marca por su slug",
+                "description": "Obtiene los detalles de una marca específica según su slug único.",
+                "operationId": "10a60355e76b506038e5823926f2a930",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug único de la marca",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "apple"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Marca obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Marca obtenida correctamente"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Apple"
+                                                },
+                                                "slug": {
+                                                    "type": "string",
+                                                    "example": "apple"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Dispositivos electrónicos",
+                                                    "nullable": true
+                                                },
+                                                "products_count": {
+                                                    "type": "integer",
+                                                    "example": 8
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Marca no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Marca no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/brands/{slug}/products": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Listar productos activos de una marca",
+                "description": "Obtiene los productos activos pertenecientes a la marca especificada por slug con soporte para paginación y ordenamiento.",
+                "operationId": "77d89ea157c14909ca6d35ee644e5f91",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug único de la marca",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "apple"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Criterio de orden: price_asc, price_desc, latest",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "price_asc",
+                                "price_desc",
+                                "latest"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de productos por página (default: 12)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Productos de la marca obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Productos de la marca obtenidos correctamente"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Marca no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Marca no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/categories": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Listar todas las categorías",
+                "description": "Obtiene la lista de todas las categorías de productos disponibles en el catálogo. Permite filtrar por búsqueda y paginar o listar completas.",
+                "operationId": "e225c2b7eb5daf7fb16e00f4f07ff030",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Término de búsqueda por nombre o descripción de categoría",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de elementos por página (si no se envía o es 'all', devuelve la lista completa)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado de categorías obtenido correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categorías obtenidas correctamente"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Laptops"
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "laptops"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Computadoras portátiles de alto rendimiento",
+                                                        "nullable": true
+                                                    },
+                                                    "products_count": {
+                                                        "type": "integer",
+                                                        "example": 12
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/categories/{slug}": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Mostrar una categoría por su slug",
+                "description": "Obtiene los detalles de una categoría específica usando su slug único.",
+                "operationId": "6b5e99ab9669011f1260b2a8fb93392e",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug único de la categoría",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "laptops"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoría obtenida correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría obtenida correctamente"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Laptops"
+                                                },
+                                                "slug": {
+                                                    "type": "string",
+                                                    "example": "laptops"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Computadoras portátiles",
+                                                    "nullable": true
+                                                },
+                                                "products_count": {
+                                                    "type": "integer",
+                                                    "example": 12
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/categories/{slug}/products": {
+            "get": {
+                "tags": [
+                    "Catálogo"
+                ],
+                "summary": "Listar productos activos de una categoría",
+                "description": "Obtiene los productos activos pertenecientes a la categoría indicada por slug con soporte para paginación y ordenamiento.",
+                "operationId": "fbb356375cbe38c22ced4cb0ff089a84",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug único de la categoría",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "laptops"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Criterio de orden: price_asc, price_desc, latest",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "price_asc",
+                                "price_desc",
+                                "latest"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de productos por página (default: 12)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 12
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Productos de la categoría obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Productos de la categoría obtenidos correctamente"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/profile": {
             "get": {
                 "tags": [
@@ -854,6 +1400,10 @@
         {
             "name": "Perfil",
             "description": "Endpoints para la gestión del perfil del cliente"
+        },
+        {
+            "name": "Catálogo",
+            "description": "Endpoints públicos para categorías, marcas y navegación del catálogo"
         }
     ]
 }
