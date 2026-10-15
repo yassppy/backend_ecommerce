@@ -60,6 +60,14 @@ use OpenApi\Attributes as OA;
     name: "Checkout",
     description: "Endpoints para el proceso de confirmación de compra y creación de órdenes"
 )]
+#[OA\Tag(
+    name: "Órdenes",
+    description: "Endpoints para consultar historial, detalle y cancelación de pedidos del cliente"
+)]
+#[OA\Tag(
+    name: "Pagos PayPal",
+    description: "Endpoints para integración y procesamiento de pagos con PayPal Sandbox"
+)]
 abstract class Controller
 {
     //

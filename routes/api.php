@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CheckoutController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\PayPalPaymentController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ShippingAddressController;
@@ -75,6 +77,25 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [CheckoutController::class, 'index']);
         Route::post('/place-order', [CheckoutController::class, 'placeOrder']);
     });
+
+    // Rutas de Órdenes (requieren Bearer Token con Sanctum)
+    Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{id}', [OrderController::class, 'show'])->whereNumber('id');
+        Route::post('/{id}/cancel', [OrderController::class, 'cancel'])->whereNumber('id');
+    });
+
+    // Rutas de Pagos PayPal
+    Route::prefix('payments/paypal')->group(function () {
+        // Crear orden de pago (requiere auth)
+        Route::middleware('auth:sanctum')->post('/create/{order_id}', [PayPalPaymentController::class, 'create'])->whereNumber('order_id');
+
+        // Callbacks públicos — PayPal redirige aquí al cliente tras pagar o cancelar
+        Route::get('/success', [PayPalPaymentController::class, 'success']);
+        Route::get('/cancel', [PayPalPaymentController::class, 'cancel']);
+    });
+
+
 
     // Rutas públicas de Categorías
     Route::prefix('categories')->group(function () {
