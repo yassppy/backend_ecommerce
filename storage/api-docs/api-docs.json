@@ -1867,6 +1867,635 @@
                 ]
             }
         },
+        "/api/v1/orders": {
+            "get": {
+                "tags": [
+                    "Órdenes"
+                ],
+                "summary": "Listar historial de órdenes del cliente",
+                "description": "Obtiene el listado cronológico de pedidos realizados por el usuario autenticado, con soporte para filtrado por estado y paginación.",
+                "operationId": "00d3856d2d3d93124e0cc021d0cb5b79",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por estado: pending, paid, shipped, cancelled",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "paid",
+                                "shipped",
+                                "cancelled"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Cantidad de órdenes por página (por defecto 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Historial de órdenes obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Órdenes obtenidas correctamente"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No autenticado. Por favor inicie sesión."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Órdenes"
+                ],
+                "summary": "Ver detalle completo de una orden",
+                "description": "Obtiene la información detallada de una compra específica: productos comprados con precio histórico, dirección de envío y estado de pagos.",
+                "operationId": "b2f9845bf9fe11158e0e43f1dd0c5802",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la orden",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle de orden obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden obtenida correctamente"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Orden no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden no encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No autenticado. Por favor inicie sesión."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/orders/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Órdenes"
+                ],
+                "summary": "Cancelar una orden pendiente",
+                "description": "Permite al cliente cancelar una orden que aún se encuentra en estado pending. Devuelve el stock reservado al catálogo y marca los pagos asociados como fallidos/cancelados.",
+                "operationId": "7fb5c5cde4a48c07f8f7551e1abfac97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la orden a cancelar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orden cancelada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden cancelada correctamente"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "La orden no se puede cancelar porque ya está pagada o procesada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Solo se pueden cancelar órdenes en estado pendiente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Orden no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden no encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No autenticado. Por favor inicie sesión."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/payments/paypal/create/{order_id}": {
+            "post": {
+                "tags": [
+                    "Pagos PayPal"
+                ],
+                "summary": "Crear orden de pago en PayPal",
+                "description": "Genera una orden de pago en PayPal Sandbox para una orden en estado pending del usuario. Retorna la approval_url para que el frontend redirija al cliente a pagar en PayPal.",
+                "operationId": "9127fd6f4e74494574c1341878febba6",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "description": "ID de la orden pendiente a pagar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orden PayPal creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden PayPal generada exitosamente"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "order_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "paypal_order_id": {
+                                                    "type": "string",
+                                                    "example": "5O190127TN364715T"
+                                                },
+                                                "approval_url": {
+                                                    "type": "string",
+                                                    "example": "https://www.sandbox.paypal.com/checkoutnow?token=5O190127TN364715T"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 250
+                                                },
+                                                "currency": {
+                                                    "type": "string",
+                                                    "example": "USD"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "La orden no se encuentra en estado pendiente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La orden ya ha sido pagada o se encuentra cancelada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Orden no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Orden no encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error de comunicación con PayPal API",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se pudo conectar con PayPal."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No autenticado. Por favor inicie sesión."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/payments/paypal/success": {
+            "get": {
+                "tags": [
+                    "Pagos PayPal"
+                ],
+                "summary": "Retorno exitoso de PayPal",
+                "description": "URL pública a la que PayPal redirige al cliente tras aprobar el pago. Recibe el token (paypal_order_id) y PayerID como query params, captura el pago en PayPal y actualiza la orden a 'paid'.",
+                "operationId": "27a60c73cd57137f4f6812c565843f45",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "ID de la orden en PayPal (paypal_order_id)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "5O190127TN364715T"
+                        }
+                    },
+                    {
+                        "name": "PayerID",
+                        "in": "query",
+                        "description": "Identificador del comprador en PayPal",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "CR2X5N3J4V6"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pago capturado y orden confirmada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pago completado y orden confirmada exitosamente"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "order_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "total_price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 250
+                                                },
+                                                "order_status": {
+                                                    "type": "string",
+                                                    "example": "paid"
+                                                },
+                                                "payment_status": {
+                                                    "type": "string",
+                                                    "example": "completed"
+                                                },
+                                                "transaction_id": {
+                                                    "type": "string",
+                                                    "example": "5O190127TN364715T"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Token inválido o fallo en la captura",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se pudo capturar el pago en PayPal."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró una orden asociada al token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No se encontró una orden asociada a la transacción de PayPal indicada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/paypal/cancel": {
+            "get": {
+                "tags": [
+                    "Pagos PayPal"
+                ],
+                "summary": "Retorno de pago cancelado por el cliente",
+                "description": "URL pública a la que PayPal redirige cuando el cliente cancela el proceso de pago. Informa al frontend que la orden sigue pendiente y no fue procesada.",
+                "operationId": "172dc478fe654ef128a1eb5bf8dee933",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token de la orden en PayPal cancelada",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "5O190127TN364715T"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cancelación registrada. La orden sigue pendiente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "El proceso de pago fue cancelado por el usuario. La orden sigue pendiente."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "5O190127TN364715T"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/products": {
             "get": {
                 "tags": [
@@ -3660,6 +4289,14 @@
         {
             "name": "Checkout",
             "description": "Endpoints para el proceso de confirmación de compra y creación de órdenes"
+        },
+        {
+            "name": "Órdenes",
+            "description": "Endpoints para consultar historial, detalle y cancelación de pedidos del cliente"
+        },
+        {
+            "name": "Pagos PayPal",
+            "description": "Endpoints para integración y procesamiento de pagos con PayPal Sandbox"
         }
     ]
 }

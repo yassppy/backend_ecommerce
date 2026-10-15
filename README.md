@@ -49,3 +49,36 @@
 | **PostgreSQL (Neon)** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white) | Base de datos relacional Cloud-native de alto rendimiento. |
 | **ChatGPT & Gemini** | ![AI](https://img.shields.io/badge/OpenAI_&_Google-412991?style=flat-square&logo=openai&logoColor=white) | Modelos de IA integrados para automatización y análisis. |
 | **Composer** | ![Composer](https://img.shields.io/badge/Composer-885630?style=flat-square&logo=composer&logoColor=white) | Gestor de dependencias. |
+
+---
+
+## ⚙️ Configuración
+
+Sigue los pasos detallados en [`docs/command.md`](docs/command.md) para configurar:
+
+- 🗄️ **Base de datos Neon (PostgreSQL):** conexión, variables de entorno y solución de problemas con IPv6.
+- 💳 **PayPal Sandbox:** registro de cuenta, creación de App y flujo de prueba completo.
+
+---
+
+## ▶️ Ejecutar
+
+```bash
+php artisan serve
+```
+
+Luego accede a la documentación interactiva de los endpoints en:
+
+**[http://127.0.0.1:8000/api/documentation](http://127.0.0.1:8000/api/documentation)**
+
+---
+
+## 📸 Demostración
+
+### Crear orden y aprobar pago en PayPal Sandbox
+
+![Crear orden PayPal y aprobar en Sandbox](docs/test_endpoint.png)
+
+### Retorno exitoso — orden confirmada como `paid`
+
+![Retorno exitoso del pago PayPal](docs/endpoint_retorno_exitoso.png)

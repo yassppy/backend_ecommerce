@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'paypal' => [
+        'mode' => env('PAYPAL_MODE', 'sandbox'),
+        'client_id' => env('PAYPAL_MODE', 'sandbox') === 'live'
+            ? env('PAYPAL_LIVE_CLIENT_ID')
+            : env('PAYPAL_SANDBOX_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_MODE', 'sandbox') === 'live'
+            ? env('PAYPAL_LIVE_CLIENT_SECRET')
+            : env('PAYPAL_SANDBOX_CLIENT_SECRET'),
+        'currency' => env('PAYPAL_CURRENCY', 'USD'),
+        'return_base_url' => env('PAYPAL_RETURN_BASE_URL', 'http://127.0.0.1:8000'),
+    ],
 ];
